@@ -22,12 +22,10 @@ the pretrained model ('model_name'). The output is a matrix with the inferred sp
 Import python packages
 
 """
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
-import os, sys
-if 'Demo scripts' in os.getcwd():
-    sys.path.append( os.path.abspath('..') ) # add parent directory to path for imports
-    os.chdir('..')  # change to main directory
-print('Current working directory: {}'.format( os.getcwd() ))
+import os
 
 from cascade2p import checks
 checks.check_packages()
@@ -134,24 +132,3 @@ save_path = os.path.join(folder, 'full_prediction_'+os.path.basename(example_fil
 #np.save(save_path, spike_prob)
 sio.savemat(save_path+'.mat', {'spike_prob':spike_prob})
 
-"""
-
-Plot example predictions
-
-"""
-
-neuron_indices = np.random.randint(traces.shape[0], size=10)
-plot_dFF_traces(traces,neuron_indices,frame_rate,spike_prob)
-
-
-
-"""
-
-Plot noise-matched examples from the ground truth
-
-"""
-
-median_noise = np.round(np.median(noise_levels))
-nb_traces = 8
-duration = 50 # seconds
-plot_noise_matched_ground_truth( model_name, median_noise, frame_rate, nb_traces, duration )
